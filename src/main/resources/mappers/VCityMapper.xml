@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.VCityMapper" >
+  <resultMap id="BaseResultMap" type="com.project.pojo.VCity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="v_province_id" property="vProvinceId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, v_province_id, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_city
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectCity" resultType="string" parameterType="java.lang.Integer">
+    select 
+    name
+    from v_city
+    where id = #{cityId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByProvinceId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_city
+    where v_province_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from v_city
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.project.pojo.VCity" >
+    insert into v_city (id, v_province_id, name
+      )
+    values (#{id,jdbcType=INTEGER}, #{vProvinceId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.project.pojo.VCity" >
+    insert into v_city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="vProvinceId != null" >
+        v_province_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="vProvinceId != null" >
+        #{vProvinceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.project.pojo.VCity" >
+    update v_city
+    <set >
+      <if test="vProvinceId != null" >
+        v_province_id = #{vProvinceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.project.pojo.VCity" >
+    update v_city
+    set v_province_id = #{vProvinceId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

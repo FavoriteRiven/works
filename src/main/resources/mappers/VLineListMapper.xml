@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.VLineListMapper" >
+  <resultMap id="BaseResultMap" type="com.project.pojo.VLineList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="vlineid" property="vlineid" jdbcType="INTEGER" />
+    <result column="ipaddress" property="ipaddress" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, vlineid, ipaddress, state
+  </sql>
+  
+  
+  <select id="selectAllLineList" resultMap="BaseResultMap">
+    select 
+    vll.id, vll.vlineid, vll.ipaddress, vll.state,vl.name vlinename
+    from v_line_list vll join v_line vl on vll.vlineid = vl.id
+    where vll.vlineid = #{id}
+    <if test="pageNum !=null and pageSize !=null">
+    Limit #{pageNum},#{pageSize}
+    </if>
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+  	select count(1) from v_line_list
+  </select>
+  
+  
+  <select id="selectByVlineId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <!-- select 
+    *
+    from v_line_list
+    where vlineid = #{lid,jdbcType=INTEGER} and state = 0  LIMIT 1 -->
+    
+    <!-- SELECT * FROM v_line_list AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) 
+	FROM v_line_list)-(SELECT MIN(id) 
+	FROM v_line_list))+(SELECT MIN(id) FROM v_line_list)) AS id) AS t2 
+	WHERE t1.id >= t2.id 
+	<if test="beforeid!=0">
+    	and id!= #{beforeid}
+    </if>
+    and t1.vlineid = #{lid,jdbcType=INTEGER}
+	ORDER BY t1.id LIMIT 1 -->
+    
+    SELECT * FROM v_line_list where vlineid = #{lid,jdbcType=INTEGER}
+	<if test="beforeid!=0">
+    	and id!= #{beforeid}
+    </if>
+	ORDER BY RAND() LIMIT 1
+    
+    <!-- SELECT * FROM v_line_list  WHERE vlineid = #{lid,jdbcType=INTEGER} and id >= ((SELECT MAX(id) FROM v_line_list )-(SELECT MIN(id) FROM v_line_list )) * RAND() + (SELECT MIN(id) FROM v_line_list ) 
+    <if test="beforeid!=0">
+    	and id!= #{beforeid}
+    </if>
+      LIMIT 1 -->
+  </select>
+  
+  <update id="updateByLineListId" parameterType="java.lang.Integer" >
+    update v_line_list
+    <set>
+        state = 1
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateLineListState" parameterType="java.lang.Integer" >
+    update v_line_list
+    <set>
+        state = 0
+    </set>
+    where id = #{lid,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_line_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from v_line_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.project.pojo.VLineList" >
+    insert into v_line_list (id, vlineid, ipaddress, 
+      state)
+    values (#{id,jdbcType=INTEGER}, #{vlineid,jdbcType=INTEGER}, #{ipaddress,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.project.pojo.VLineList" >
+    insert into v_line_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="vlineid != null" >
+        vlineid,
+      </if>
+      <if test="ipaddress != null" >
+        ipaddress,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="vlineid != null" >
+        #{vlineid,jdbcType=INTEGER},
+      </if>
+      <if test="ipaddress != null" >
+        #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective1" parameterType="com.project.pojo.VLineList" >
+    update v_line_list
+    <set >
+      <if test="vlineid != null" >
+        vlineid = #{vlineid,jdbcType=INTEGER},
+      </if>
+      <if test="ipaddress != null" >
+        ipaddress = #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.project.pojo.VLineList" >
+    update v_line_list
+    set vlineid = #{vlineid,jdbcType=INTEGER},
+      ipaddress = #{ipaddress,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

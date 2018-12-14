@@ -1,0 +1,17 @@
+{
+	"contentManagement": [
+		{
+			"title": "线路管理",
+			"icon": "&#xe66c;",
+			"href": "page/line/line.html",
+			"spread": false
+		}, {
+			"title": "价格管理",
+			"icon": "&#xe65e",
+			"href": "page/price/price.html",
+			"spread": false
+		}
+	]
+}
+
+

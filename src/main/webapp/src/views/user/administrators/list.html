@@ -1,0 +1,160 @@
+
+<title>鍚庡彴绠＄悊鍛�</title>
+  
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">涓婚〉</a>
+    <a><cite>鐢ㄦ埛</cite></a>
+    <a><cite>鍚庡彴绠＄悊鍛�</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">   
+  <div class="layui-card">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-useradmin-formlist">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">鐧诲綍鍚�</label>
+          <div class="layui-input-block">
+            <input type="text" name="loginname" placeholder="璇疯緭鍏�" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">鎵嬫満</label>
+          <div class="layui-input-block">
+            <input type="text" name="telphone" placeholder="璇疯緭鍏�" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">閭</label>
+          <div class="layui-input-block">
+            <input type="text" name="email" placeholder="璇疯緭鍏�" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">瑙掕壊</label>
+          <div class="layui-input-block">
+            <select name="role">
+              <option value="0">绠＄悊鍛�</option>
+              <option value="1">瓒呯骇绠＄悊鍛�</option>
+              <option value="2">绾犻敊鍛�</option>
+              <option value="3">閲囪喘鍛�</option>
+              <option value="4">鎺ㄩ攢鍛�</option>
+              <option value="5">杩愯惀浜哄憳</option>
+              <option value="6">缂栬緫</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="LAY-user-back-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="layui-card-body">
+      <div style="padding-bottom: 10px;">
+        <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">鍒犻櫎</button>
+        <button class="layui-btn layuiadmin-btn-admin" data-type="add">娣诲姞</button>
+      </div>
+      
+      <table id="LAY-user-back-manage" lay-filter="LAY-user-back-manage"></table>  
+      <script type="text/html" id="buttonTpl">
+        {{#  if(d.check == true){ }}
+          <button class="layui-btn layui-btn-xs">宸插鏍�</button>
+        {{#  } else { }}
+          <button class="layui-btn layui-btn-primary layui-btn-xs">鏈鏍�</button>
+        {{#  } }}
+      </script>
+      <script type="text/html" id="table-useradmin-admin">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>缂栬緫</a>
+        {{#  if(d.role == '瓒呯骇绠＄悊鍛�'){ }}
+          <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>鍒犻櫎</a>
+        {{#  } else { }}
+          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>鍒犻櫎</a>
+        {{#  } }}
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'table'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,view = layui.view
+  ,table = layui.table
+  ,form = layui.form;
+  
+  form.render(null, 'layadmin-useradmin-formlist');
+  
+  //鐩戝惉鎼滅储
+  form.on('submit(LAY-user-back-search)', function(data){
+    var field = data.field;
+    
+    //鎵ц閲嶈浇
+    table.reload('LAY-user-back-manage', {
+      where: field
+    });
+  });
+
+  //浜嬩欢
+  var active = {
+    batchdel: function(){
+      var checkStatus = table.checkStatus('LAY-user-back-manage')
+      ,checkData = checkStatus.data; //寰楀埌閫変腑鐨勬暟鎹�
+
+      if(checkData.length === 0){
+        return layer.msg('璇烽�夋嫨鏁版嵁');
+      }
+      
+      layer.prompt({
+        formType: 1
+        ,title: '鏁忔劅鎿嶄綔锛岃楠岃瘉鍙ｄ护'
+      }, function(value, index){
+        layer.close(index);
+        
+        layer.confirm('纭畾鍒犻櫎鍚楋紵', function(index) {
+          
+          //鎵ц Ajax 鍚庨噸杞�
+          /*
+          admin.req({
+            url: 'xxx'
+            //,鈥︹��
+          });
+          */
+          table.reload('LAY-user-back-manage');
+          layer.msg('宸插垹闄�');
+        });
+      }); 
+    }
+    ,add: function(){
+      admin.popup({
+        title: '娣诲姞绠＄悊鍛�'
+        ,area: ['420px', '450px']
+        ,id: 'LAY-popup-useradmin-add'
+        ,success: function(layero, index){
+          view(this.id).render('user/administrators/adminform').done(function(){
+            form.render(null, 'layuiadmin-form-admin');
+            
+            //鐩戝惉鎻愪氦
+            form.on('submit(LAY-user-back-submit)', function(data){
+              var field = data.field; //鑾峰彇鎻愪氦鐨勫瓧娈�
+
+              //鎻愪氦 Ajax 鎴愬姛鍚庯紝鍏抽棴褰撳墠寮瑰眰骞堕噸杞借〃鏍�
+              //$.ajax({});
+              layui.table.reload('LAY-user-back-manage'); //閲嶈浇琛ㄦ牸
+              layer.close(index); //鎵ц鍏抽棴 
+            });
+          });
+        }
+      });
+    }
+  }  
+  $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+});
+</script>

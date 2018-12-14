@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>首页</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="../../layui/css/layui.css" media="all"/>
+	<link rel="stylesheet" href="../../css/public.css" media="all" />
+</head>
+<body class="childrenBody">
+	<div class="layui-row layui-col-space10 panel_box">
+		<form action="" class="layui-form">
+			
+			<input type="hidden" name="id" class="lineId" />
+			
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">购买方式</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="title" lay-verify="required|title" autocomplete="off" class="layui-input pricetitle">
+			      </div>
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">价格</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="price" lay-verify="required|price" autocomplete="off" class="layui-input price">
+			      </div>
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">原价</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="costprice" lay-verify="required|costprice" autocomplete="off" class="layui-input costprice">
+			      </div>
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">购买单位</label>
+			      <div class="layui-input-inline">
+			        <select class="company" name="company" lay-filter="company">
+			        	<option value="">请选择</option>
+			        	<option value="1">天</option>
+			        	<option value="2">月</option>
+			        	<option value="3">季</option>
+			        	<option value="4">半年</option>
+			        	<option value="5">年</option>
+			        	<option value="6">永久</option>
+			        </select>
+			      </div>
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">最大登录数</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="maxlogin" lay-verify="required" autocomplete="off" class="layui-input maxlogin">
+			      </div>
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			      <label class="layui-form-label">描述1</label>
+			      <div class="layui-input-block">
+			        <textarea name="describe1" rows="" cols="" class="layui-textarea describe1 layui-textarea5"></textarea>
+			      </div>
+			</div>
+			<div class="layui-form-item">
+			      <label class="layui-form-label">描述2</label>
+			      <div class="layui-input-block">
+			        <textarea name="describe2" rows="" cols="" class="layui-textarea describe2 layui-textarea5"></textarea>
+			      </div>
+			</div>
+			<div class="layui-form-item">
+			      <label class="layui-form-label">描述3</label>
+			      <div class="layui-input-block">
+			        <textarea name="describe3" rows="" cols="" class="layui-textarea describe3 layui-textarea5" ></textarea>
+			      </div>
+			</div>
+			
+			<div class="layui-form-item center">
+			    <button class="layui-btn" lay-filter="addPrice" lay-submit><i class="layui-icon">&#xe609;</i>提交</button>
+			</div>
+		</form>
+		
+	</div>
+	<script type="text/javascript" src="../../layui/layui.js"></script>
+	<script src="../../js/cache.js"></script>
+	<script type="text/javascript" src="price_edit.js"></script>
+</body>
+</html>

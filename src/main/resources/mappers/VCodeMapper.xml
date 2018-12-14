@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.VCodeMapper" >
+  <resultMap id="BaseResultMap" type="com.project.pojo.VCode" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
+    <result column="validity" property="validity" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, phone, verify_code, validity
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_code
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="getCode" resultType="int" parameterType="string" >
+    select count(1)
+    from v_code
+    where phone = #{phone,jdbcType=VARCHAR} and verify_code = #{code,jdbcType=INTEGER}
+  </select>
+  
+  <select id="checkByPhone" resultType="int" parameterType="java.lang.String" >
+    select count(1)
+    <include refid="Base_Column_List" />
+    from v_code
+    where phone = #{phone,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getValidity" resultType="date" parameterType="java.lang.String" >
+    select validity
+    <include refid="Base_Column_List" />
+    from v_code
+    where phone = #{phone,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateByPhone" parameterType="com.project.pojo.VCode" >
+    update v_code
+    set verify_code = #{verifyCode,jdbcType=VARCHAR},
+      validity = #{validity,jdbcType=TIMESTAMP}
+    where phone = #{phone,jdbcType=INTEGER}
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from v_code
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.project.pojo.VCode" >
+    insert into v_code (id, phone, verify_code, 
+      validity)
+    values (#{id,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{verifyCode,jdbcType=VARCHAR}, 
+      #{validity,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.project.pojo.VCode" >
+    insert into v_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="verifyCode != null" >
+        verify_code,
+      </if>
+      <if test="validity != null" >
+        validity,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyCode != null" >
+        #{verifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="validity != null" >
+        #{validity,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.project.pojo.VCode" >
+    update v_code
+    <set >
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyCode != null" >
+        verify_code = #{verifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="validity != null" >
+        validity = #{validity,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.project.pojo.VCode" >
+    update v_code
+    set phone = #{phone,jdbcType=VARCHAR},
+      verify_code = #{verifyCode,jdbcType=VARCHAR},
+      validity = #{validity,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

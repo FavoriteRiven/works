@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.dao.VUserMapper" >
+  <resultMap id="BaseResultMap" type="com.project.pojo.VUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="pass_word" property="passWord" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="isfilter" property="isfilter" jdbcType="TINYINT" />
+    <result column="ismember" property="ismember" jdbcType="TINYINT" />
+    <result column="recharge_time" property="rechargeTime" jdbcType="TIMESTAMP" />
+    <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="islogin" property="islogin" jdbcType="TINYINT" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
+    <result column="current_connection" property="currentConnection" jdbcType="INTEGER" />
+    <result column="maxlogin" property="maxlogin" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, pass_word, phone, create_time, update_time, isfilter, ismember, recharge_time, 
+    expire_time, openid, islogin, user_type, current_connection,maxlogin
+  </sql>
+  
+  <select id="selectNetwork" resultMap="BaseResultMap">
+    select url network
+    from v_network
+  </select>
+  
+  <select id="consoleLogin" parameterType="string" resultType="com.project.pojo.VConsoleUser">
+    select * from v_consoleuser where username = #{username} and password = #{password}
+  </select>
+  
+  <select id="selectAllUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from v_user
+    <if test="phone !=null">
+    where phone like #{phone}
+    </if>
+    order by id desc
+    <if test="pageNum !=null and pageSize !=null">
+    Limit #{pageNum},#{pageSize}
+    </if>
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+  	select count(1) from v_user
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="checkByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from v_user
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="checkUsername" resultType="int" parameterType="string" >
+    select count(1) from v_user
+    where user_name = #{username} or phone = #{username}
+  </select>
+  
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from v_user
+    where ( user_name = #{username} or phone = #{username}) and pass_word = #{password}
+  </select>
+  
+  <select id="checkUserById" resultType="int" parameterType="int" >
+    select count(1) from v_user
+    where id = #{id}
+  </select>
+  
+  <select id="checkUserPhone" resultType="int" parameterType="string" >
+    select count(1) from v_user
+    where phone = #{phone}
+  </select>
+  
+  <select id="selectPhoneLogin" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    from v_user
+    where phone = #{phone}
+  </select>
+  
+  
+  <update id="updateLineIp" parameterType="Integer" >
+    update v_user
+    set current_connection = #{line_id,jdbcType=INTEGER}
+    where id = #{uid,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByUid">
+    update v_user
+    set 
+    recharge_time = #{date},
+    expire_time = #{expireTime},
+    maxlogin = #{maxlogin},
+    ismember = #{ismember}
+    where id = #{uid}
+  </update>
+  
+  <update id="updateByUid2">
+    update v_user
+    set 
+    expire_time = #{expireTime},
+    maxlogin = #{maxlogin},
+    ismember = #{ismember}
+    where id = #{uid}
+  </update>
+  
+  
+  <update id="updatePasswordByPhone" parameterType="string">
+  		update v_user set pass_word = #{passwordNew} where phone = #{phone}
+  </update>
+  
+  
+    <update id="updateConsoleInfo" parameterType="string" >
+    update v_consoleuser
+    <set >
+      <if test="username != null" >
+        username = #{username},
+      </if>
+      <if test="password != null" >
+        password = #{password},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  
+  
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from v_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.project.pojo.VUser" >
+    insert into v_user (id, user_name, pass_word, 
+      phone, create_time, update_time, 
+      isfilter, ismember, recharge_time, 
+      expire_time, openid, islogin, 
+      user_type, current_connection,maxlogin)
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{passWord,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isfilter,jdbcType=TINYINT}, #{ismember,jdbcType=TINYINT}, #{rechargeTime,jdbcType=TIMESTAMP}, 
+      #{expireTime,jdbcType=TIMESTAMP}, #{openid,jdbcType=VARCHAR}, #{islogin,jdbcType=TINYINT}, 
+      #{userType,jdbcType=TINYINT}, #{currentConnection,jdbcType=INTEGER},#{maxlogin})
+  </insert>
+  <insert id="insertSelective" parameterType="com.project.pojo.VUser" >
+    insert into v_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="passWord != null" >
+        pass_word,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isfilter != null" >
+        isfilter,
+      </if>
+      <if test="ismember != null" >
+        ismember,
+      </if>
+      <if test="rechargeTime != null" >
+        recharge_time,
+      </if>
+      <if test="expireTime != null" >
+        expire_time,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="islogin != null" >
+        islogin,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="currentConnection != null" >
+        current_connection,
+      </if>
+      <if test="maxlogin != null" >
+        maxlogin,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null" >
+        #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isfilter != null" >
+        #{isfilter,jdbcType=TINYINT},
+      </if>
+      <if test="ismember != null" >
+        #{ismember,jdbcType=TINYINT},
+      </if>
+      <if test="rechargeTime != null" >
+        #{rechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="islogin != null" >
+        #{islogin,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="currentConnection != null" >
+        #{currentConnection,jdbcType=INTEGER},
+      </if>
+      <if test="maxlogin != null" >
+        #{maxlogin,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.project.pojo.VUser" >
+    update v_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null" >
+        pass_word = #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isfilter != null" >
+        isfilter = #{isfilter,jdbcType=TINYINT},
+      </if>
+      <if test="ismember != null" >
+        ismember = #{ismember,jdbcType=TINYINT},
+      </if>
+      <if test="rechargeTime != null" >
+        recharge_time = #{rechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="islogin != null" >
+        islogin = #{islogin,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="currentConnection != null" >
+        current_connection = #{currentConnection,jdbcType=INTEGER},
+      </if>
+      <if test="maxlogin != null" >
+        maxlogin = #{maxlogin,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.project.pojo.VUser" >
+    update v_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      pass_word = #{passWord,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      isfilter = #{isfilter,jdbcType=TINYINT},
+      ismember = #{ismember,jdbcType=TINYINT},
+      recharge_time = #{rechargeTime,jdbcType=TIMESTAMP},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      openid = #{openid,jdbcType=VARCHAR},
+      islogin = #{islogin,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT},
+      current_connection = #{currentConnection,jdbcType=INTEGER},
+      maxlogin = #{maxlogin}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
